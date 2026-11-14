@@ -50,11 +50,11 @@ the tree-sitter grammars are built with. It is built and tested with Rust 1.97; 
 have not been tried.
 
 ```bash
-git clone https://github.com/Iamshi-vissa/X-Editor.git
+git clone https://github.com/Iamshi-vissa/Glyphe.git
 ```
 
 ```bash
-cd X-Editor
+cd Glyphe
 ```
 
 ```bash
