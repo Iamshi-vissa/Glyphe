@@ -69,7 +69,137 @@ cargo install --path .
 
 Run `glyphe --help` for the key reference in the terminal.
 
+### Windows
+
+Rust needs a 64-bit C toolchain. If the build stops with a `dlltool` error mentioning
+`Invalid bfd target`, an old 32-bit MinGW is first on your `PATH`. Either put a 64-bit MinGW in
+front of it for the current window:
+
+```powershell
+$env:PATH = "C:\msys64\mingw64\bin;" + $env:PATH
+```
+
+or install "Desktop development with C++" from the Visual Studio Build Tools and switch Rust to it:
+
+```powershell
+rustup default stable-x86_64-pc-windows-msvc
+```
+
+Glyphe is developed and tested on Linux; the Windows build is less exercised.
+
+## TUTORIAL
+
+Glyphe runs inside your terminal. It takes over the window to show the file, and when you quit
+you are back at the prompt. This walk-through takes about five minutes.
+
+### 1. Open a file
+
+```bash
+glyphe hello.py
+```
+
+The file does not need to exist; it is created the first time you save. You see line numbers on
+the left, a status bar showing the mode and file name, and a message line at the bottom.
+
+### 2. Type some text
+
+Glyphe starts in *normal mode*, where keys are commands and do not type text. The status bar says
+`NORMAL`.
+
+1. Press `i`. The status bar changes to `INSERT`.
+2. Type these two lines. Press Enter after the first, and Tab before `return` to indent it:
+
+   ```python
+   def greet(name):
+       return "hello " + name
+   ```
+
+3. Press `Esc` to go back to normal mode.
+
+If you are ever unsure what state you are in, press `Esc`. It always returns to normal mode.
+
+### 3. Save
+
+Type `:w` and press Enter. The message line shows `"hello.py" 2L, 43B written`. The `[+]` in the
+status bar, which marks unsaved changes, disappears.
+
+### 4. Move around
+
+In normal mode:
+
+| Keys | Moves to |
+|---|---|
+| `h` `j` `k` `l`, or the arrow keys | Left, down, up, right |
+| `w` and `b` | Next word, previous word |
+| `0` and `$` | Start and end of the line |
+| `gg` and `G` | Top and bottom of the file |
+
+Try `gg` to go to the top, then `w` three times to land on `name`. Punctuation such as `(` counts
+as a word of its own.
+
+### 5. Change text
+
+Commands are an *operator* followed by *what to act on*. With the cursor on `name`:
+
+1. Type `cw`. That is "change word": the word is removed and you are in insert mode.
+2. Type `person` and press `Esc`.
+
+The line now reads `def greet(person):`. Other combinations work the same way:
+
+| Keys | Meaning |
+|---|---|
+| `dw` | Delete a word |
+| `dd` | Delete the line |
+| `d$` | Delete to the end of the line |
+| `ci"` | Change the text inside the quotes |
+| `yy` then `p` | Copy the line, then paste it below |
+| `3dd` | Delete three lines |
+
+### 6. Undo, redo and repeat
+
+- `u` undoes the last change. Press it now and `person` becomes `name` again.
+- `Ctrl-r` redoes it.
+- `.` repeats your last change at the cursor. After one `cw`, moving to another word and pressing
+  `.` makes the same edit there.
+
+### 7. Search and replace
+
+- Type `/name` and press Enter to jump to the next match. Matches are highlighted.
+- Press `n` for the next match and `N` for the previous one.
+- Type `:%s/name/person/g` and press Enter to replace every `name` in the file.
+- Type `:noh` and press Enter to hide the highlighting.
+
+### 8. Work with more than one file
+
+Type `:e other.py` and press Enter to open a second file. Switch between open files with `:bn`
+and `:bp`, and list them with `:ls`.
+
+### 9. Quit
+
+| Command | Result |
+|---|---|
+| `:q` | Quit. Refuses if a file has unsaved changes |
+| `:wq` | Save and quit |
+| `:q!` | Quit and discard unsaved changes |
+
+### 10. Optional: code help
+
+Install a language server for your language, for example for Python:
+
+```bash
+pip install pyright
+```
+
+Open a Python file again and Glyphe uses it automatically:
+
+- Mistakes are underlined. Put the cursor on the line to read the message at the bottom.
+- `gd` jumps to where a name is defined, and `Ctrl-o` jumps back.
+- `K` shows the documentation for the name under the cursor.
+- Suggestions appear as you type. `Ctrl-n` and `Ctrl-p` move through them, and `Tab` accepts one.
+
 ## KEYS
+
+The complete reference. The tutorial above covers the ones you need first.
 
 **Moving.** A count such as `3w` or `12G` repeats any of these.
 
